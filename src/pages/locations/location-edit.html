@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      {{item ? item.name : 'Create' | translate}}
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+        <span ion-text color="primary" showWhen="ios">{{ 'Cancel' | translate }}</span>
+        <ion-icon name="md-close" showWhen="android,windows,core"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+
+  <form [formGroup]="locationForm" (ngSubmit)="addLocation()">
+    <div #map id="map"></div>
+    <ion-item>
+      <ion-label floating>{{ 'Address' | translate }}</ion-label>
+      <ion-input formControlName="address"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>{{ 'Phone' | translate }}</ion-label>
+      <ion-input formControlName="phone"></ion-input>
+    </ion-item>
+
+      <ion-row>
+        <ion-col width-50 >
+          <ion-buttons padding left>
+            <button ion-button type="button" (click)="deleteLocation()" color="danger">{{ 'Delete' | translate}}</button>
+          </ion-buttons>
+        </ion-col>
+        <ion-col width-50>
+          <ion-buttons padding right>
+            <input type="hidden" formControlName="id"/>
+            <input type="hidden" formControlName="lat"/>
+            <input type="hidden" formControlName="lng"/>
+            <button ion-button color="light" type="reset" (click)="locationForm.reset();dismiss()">{{ 'Cancel' | translate }}</button>
+            <button ion-button type="submit" [disabled]="!locationForm.valid">{{ 'Save' | translate }}</button>
+          </ion-buttons>
+        </ion-col>
+      </ion-row>
+
+
+  </form>
+</ion-content>

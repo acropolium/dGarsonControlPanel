@@ -1,0 +1,36 @@
+<ion-header>
+
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>{{ 'Client' | translate}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="userForm" (ngSubmit)="saveUser()">
+    <ion-item>
+      <ion-label floating>{{ 'username' | translate}}</ion-label>
+      <ion-input formControlName="name"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="userForm.get('role').value == 'client'">
+      <ion-label floating>{{ 'Phone' | translate}}</ion-label>
+      <ion-input formControlName="phone"></ion-input>
+    </ion-item>
+
+    <ion-card-content *ngIf="statistic_client.length > 0" style="height: 200px;">
+      <div id="line_chart" [chartData]="getChartData()" [chartOptions]= "chartOptions" chartType="ColumnChart" GoogleChart></div>
+    </ion-card-content>
+
+    <ion-buttons padding right>
+      <input type="hidden" formControlName="id"/>
+      <button ion-button *ngIf="userForm.get('id').value" (click)="removeUser()" color="danger">{{ 'Delete' | translate}}</button>
+      <button ion-button type="submit" [disabled]="!userForm.valid">{{ 'Save' | translate}}</button>
+    </ion-buttons>
+  </form>
+
+
+</ion-content>

@@ -1,0 +1,111 @@
+<ion-header>
+
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>{{ 'Orders' | translate}}</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="presentPopover($event)">
+        <ion-icon name="funnel"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+  <ion-item *ngIf="user?.role == 'admin'">
+    <ion-label>{{'Companies' | translate}}</ion-label>
+    <ion-select [(ngModel)]="companyFilter" multiple="true" (ionChange)="filterOrders()">
+      <ion-option *ngFor="let item of companies" value="{{item.id}}" selected="true">{{item.name}}</ion-option>
+    </ion-select>
+  </ion-item>
+  <ion-item *ngIf="user?.role != 'admin'">
+    <ion-label>{{'Locations' | translate}}</ion-label>
+    <ion-select [(ngModel)]="locationFilter" (ionChange)="changeLocation()">
+      <ion-option *ngFor="let item of locations" value="{{item.id}}">{{item.address}}</ion-option>
+    </ion-select>
+  </ion-item>
+</ion-header>
+
+
+<ion-content class="cards-bg">
+
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="no-orders-message" *ngIf="!items?.length">
+    No orders yet.
+  </div>
+
+  <ion-card *ngFor="let order of items; trackBy:trackByOrders">
+    <ion-item (click)="order.showContent = !order.showContent" class="border" [@orderState]="order.state">
+      <ion-row>
+        <ion-col>
+          <h1>#{{ order.id }}  <ion-badge [color]="getColor(order.state)">{{order.state | translate}}</ion-badge></h1>
+        </ion-col>
+        <ion-col right text-right><strong>{{order.cost | number:'1.2-2'}} {{ order.company ? order.company.currency : '' }}</strong></ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col *ngIf="order.user != null" center><ion-icon name="person"></ion-icon> {{order.user.phone}} {{order.user.name}}</ion-col>
+        <ion-col right text-right>
+          <ion-icon name="time"></ion-icon> {{order.created_at|date:'d.MM HH:mm'}}
+          <span *ngIf="order.desired_time"><ion-icon name="alarm" color="danger"></ion-icon> {{order.take_away_time|date:'HH:mm'}}</span>
+        </ion-col>
+      </ion-row>
+    </ion-item>
+
+    <ion-card-content *ngIf="order.showContent">
+      <ion-row *ngIf="order.desired_time">
+        <ion-col center text-center>{{ 'Take away' | translate}}: {{order.take_away_time|date:'d.MM HH:mm'}}</ion-col>
+      </ion-row>
+
+      <ion-row *ngFor="let item of order.items; let i = index;" class="border">
+        <ion-col>
+          <ion-row>
+            <ion-col><h2>#{{i+1}} {{item.name}}</h2></ion-col>
+            <ion-col right text-right><strong>{{item.price}} {{ order.company ? order.company.currency : ''}}</strong></ion-col>
+          </ion-row>
+          <ion-row *ngFor="let option of item.options" class="order-item-option">
+            <ion-col><ion-icon name="checkmark"></ion-icon> {{option.name}}</ion-col>
+            <ion-col right text-right>{{option.price | number:'1.2-2'}} {{ order.company ? order.company.currency : '' }}</ion-col>
+            <ion-col right text-right *ngIf="option.count > 1">x {{option.count}}</ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col width-50>
+          <button ion-button block color="light" *ngIf="order.state != 'payed' && order.state != 'ready' && order.state != 'cancel'" (click)="setState(order, 'cancel')" [disabled]="order.loading">{{ 'cancel' | translate}}</button>
+          <button ion-button block color="danger" *ngIf="order.state == 'ready'" (click)="setState(order, 'notpicked')" [disabled]="order.loading">{{ 'notpicked' | translate}}</button>
+        </ion-col>
+        <ion-col width-50>
+          <button ion-button block color="primary" *ngIf="order.state == 'pending'" (click)="setState(order, 'recieved')" [disabled]="order.loading">{{ 'recieved' | translate}}</button>
+          <button ion-button block color="dark" *ngIf="order.state == 'recieved'" (click)="setState(order, 'inprogress')" [disabled]="order.loading">{{ 'inprogress' | translate}}</button>
+          <button ion-button block color="danger" *ngIf="order.state == 'inprogress'" (click)="setState(order, 'ready')" [disabled]="order.loading">{{ 'ready' | translate}}</button>
+          <button ion-button block color="secondary" *ngIf="order.state == 'ready' || order.state == 'notpicked'" (click)="setState(order, 'payed')" [disabled]="order.loading">{{ 'payed' | translate}}</button>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
+<!--<ion-footer>
+  <ion-toolbar no-border-top no-border-bottom>
+    <ion-segment [(ngModel)]="showStates" (ionChange)="filterOrders()">
+      <ion-segment-button value="all" checked>
+        <ion-icon name="list"></ion-icon>
+      </ion-segment-button>
+
+      <ion-segment-button value="new">
+        <ion-icon name="cafe"></ion-icon>
+      </ion-segment-button>
+
+      <ion-segment-button value="process">
+        <ion-icon name="construct"></ion-icon>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-footer>-->

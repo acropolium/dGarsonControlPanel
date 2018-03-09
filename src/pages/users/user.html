@@ -1,0 +1,66 @@
+<ion-header>
+
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>{{ 'User' | translate}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="userForm" (ngSubmit)="saveUser()">
+    <ion-item>
+      <ion-label floating>{{ 'username' | translate}}</ion-label>
+      <ion-input formControlName="name"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="!editUser || userForm.get('role').value !== 'client'">
+      <ion-label floating>{{ 'Email' | translate}}</ion-label>
+      <ion-input type="email" formControlName="email"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="userForm.get('role').value == 'client'">
+      <ion-label floating>{{ 'Phone' | translate}}</ion-label>
+      <ion-input formControlName="phone"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="userForm.get('role').value != 'client' && currentUser && currentUser.role == 'admin'">
+      <ion-label floating>{{ 'Role' | translate}}</ion-label>
+      <ion-select formControlName="role" cancelText="{{ 'Cancel' | translate}}">
+        <ion-option value="admin">{{ 'admin' | translate}}</ion-option>
+        <ion-option value="owner">{{ 'owner' | translate}}</ion-option>
+        <ion-option value="worker">{{ 'worker' | translate}}</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="userForm.get('role').value != 'client' && currentUser && (currentUser.role == 'admin' || currentUser.role == 'owner')">
+      <ion-label floating>{{ 'Company' | translate}}</ion-label>
+      <ion-select formControlName="company_id" (ionChange)="selectCompany($event)" cancelText="{{ 'Cancel' | translate}}">
+        <ion-option *ngFor="let company of companies" [value]="company.id">{{company.name}}</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="userForm.get('role').value != 'client' && currentUser && (currentUser.role == 'admin' || currentUser.role == 'owner')">
+      <ion-label floating>{{ 'Locations' | translate}}</ion-label>
+      <ion-select formControlName="location_id" cancelText="{{ 'Cancel' | translate }}">
+        <ion-option value="">{{'None' | translate}}</ion-option>
+        <ion-option *ngFor="let location of locations" [value]="location.id">{{location.address}}</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="userForm.get('role').value != 'client'">
+      <ion-label floating>{{ 'Password' | translate}}</ion-label>
+      <ion-input type="password" formControlName="password"></ion-input>
+    </ion-item>
+
+    <ion-buttons padding right>
+      <input type="hidden" formControlName="id"/>
+      <button ion-button *ngIf="userForm.get('id').value" (click)="removeUser()" color="danger">{{ 'Delete' | translate}}</button>
+      <button ion-button type="submit" [disabled]="!userForm.valid">{{ 'Save' | translate}}</button>
+    </ion-buttons>
+  </form>
+
+
+</ion-content>

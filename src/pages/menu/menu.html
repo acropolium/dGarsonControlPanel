@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title> '{{currentCompany?.name}}' {{currentLocation.address}} > {{ 'Menu' | translate}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <!--<ion-list>
+    <button ion-item *ngFor="let item of items" (click)="presentActionSheet(item)">
+      <ion-avatar item-left *ngIf="item.logo">
+        <img class="logo" src="{{item.logo}}">
+      </ion-avatar>
+      <h2>{{item.name}}</h2>
+      <p>{{item.description}}</p>
+      <span item-right>{{item.price | number:'1.2-2'}}</span>
+    </button>
+  </ion-list>-->
+
+  <ion-card *ngFor="let menu of items; trackBy:trackByOrders">
+    <ion-item (click)="menu.showContent = !menu.showContent" class="border">
+      <ion-row>
+        <ion-col width-80>
+            <ion-row >
+                <ion-avatar item-left *ngIf="menu.logo">
+                    <img class="logo" src="{{menu.logo}}">
+                </ion-avatar>
+                <ion-col>
+                    <h1 class="inline-block">{{ menu.name }}
+                        <!--<ion-badge>{{menu.price | number:'1.2-2'}} {{ 'currency' | translate}}</ion-badge>-->
+                    </h1>
+                    <span class="week-blue-color">{{ menu.location?.address }}</span>
+                    <p>{{menu.description}}</p>
+                </ion-col>
+            </ion-row>
+        </ion-col>
+        <ion-col right text-right width-20>
+          <strong>{{menu.price | number:'1.2-2'}} {{ currency }}</strong>
+          <ion-icon style="font-size: 24px;" ion-button icon-only clear larger name="more" (click)="presentPopover(menu, $event)"></ion-icon>
+        </ion-col>
+
+      </ion-row>
+    </ion-item>
+
+    <ion-card-content *ngIf="menu.showContent">
+      <ion-row *ngFor="let item of menu.options; let i = index;" class="border">
+        <ion-col>
+          <ion-row>
+            <ion-col><h2>#{{i+1}} {{item.name}}</h2></ion-col>
+            <ion-col right text-right><strong>{{item.price}} {{ currency }}</strong></ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+        <ion-row center>
+            <ion-col text-center (click)="presentMenuItemModal(menu)">
+                <span>Додатки редагувати </span> <ion-icon name="options" ></ion-icon>
+            </ion-col>
+        </ion-row>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-fab right bottom>
+    <button ion-fab (click)="presentEditModal(null, false)"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+</ion-content>

@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{ 'Login' | translate}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="login" (ngSubmit)="loginForm()">
+    <ion-item>
+      <ion-label floating>{{ 'Email' | translate}}</ion-label>
+      <ion-input type="email" formControlName="email"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>{{ 'Password' | translate}}</ion-label>
+      <ion-input type="password" formControlName="password"></ion-input>
+    </ion-item>
+
+    <div padding>
+      <button ion-button type="submit" [disabled]="!login.valid">{{ 'Log in' | translate}}</button>
+    </div>
+
+  </form>
+
+</ion-content>

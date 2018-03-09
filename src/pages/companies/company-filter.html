@@ -1,0 +1,18 @@
+<ion-list>
+  <ion-list-header>{{'Companies' | translate}}</ion-list-header>
+  <ion-row>
+    <ion-col>
+      <button (click)="selectAll()" ion-item detail-none class="text-button">All</button>
+    </ion-col>
+    <ion-col>
+      <button (click)="selectNone()" ion-item detail-none class="text-button">None</button>
+    </ion-col>
+  </ion-row>
+  <ion-item *ngFor="let item of companies">
+    <ion-label>{{item.name}}</ion-label>
+    <ion-checkbox checked="true"></ion-checkbox>
+  </ion-item>
+</ion-list>
+<ion-item>
+<button ion-button item-right (click)="dismiss()">OK</button>
+</ion-item>

@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      {{item ? item.name : translation['Create']}}
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+        <span ion-text color="primary" showWhen="ios">{{ translation.Cancel }}</span>
+        <ion-icon name="md-close" showWhen="android,windows,core"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-segment [(ngModel)]="locale">
+    <ion-segment-button value="uk">
+      {{translation.ukrainian}}
+    </ion-segment-button>
+    <ion-segment-button value="en">
+      {{translation.english }}
+    </ion-segment-button>
+  </ion-segment>
+
+  <form [formGroup]="menuItem" (ngSubmit)="addMenuItem()">
+    <ion-item *ngIf="locale == 'uk'">
+      <ion-label floating>{{ translation.Name }}</ion-label>
+      <ion-input formControlName="name_uk"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="locale == 'uk'">
+      <ion-label floating>{{ translation.Description }}</ion-label>
+      <ion-textarea formControlName="description_uk"></ion-textarea>
+    </ion-item>
+
+    <ion-item *ngIf="locale == 'en'">
+      <ion-label floating>{{ translation.Name }}</ion-label>
+      <ion-input formControlName="name_en"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="locale == 'en'">
+      <ion-label floating>{{ translation.Description }}</ion-label>
+      <ion-textarea formControlName="description_en"></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>{{ translation.Price }}</ion-label>
+      <ion-input type="number" formControlName="price" step="any"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-avatar item-left>
+        <img class="logo" src="{{item?.logo}}">
+      </ion-avatar>
+      <div item-content>
+        <input type="file" (change)="changeLogo($event)"/>
+      </div>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>{{ translation['Locations']}}</ion-label>
+      <ion-select formControlName="location_id" cancelText="{{ translation['Cancel'] }}">
+        <ion-option value="">{{ translation['Common'] }}</ion-option>
+        <ion-option *ngFor="let location of locations" [value]="location.id">{{location.address}}</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-buttons padding right>
+      <input type="hidden" formControlName="id"/>
+      <button ion-button color="light" type="reset" (click)="dismiss()">{{ translation.Cancel }}</button>
+      <button ion-button type="submit" [disabled]="!menuItem.valid">{{ translation.Save }}</button>
+    </ion-buttons>
+  </form>
+</ion-content>
+

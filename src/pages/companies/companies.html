@@ -1,0 +1,118 @@
+<!--
+  Generated template for the Companies page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>{{'Companies' | translate}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content class="cards-bg">
+
+  <ion-row>
+    <ion-col>
+      <ion-buttons end>
+        <button ion-button (click)="changeTypeRange('day')" round [outline]="isOutlineDay">
+          {{'day' | translate}}
+        </button>
+        <button ion-button (click)="changeTypeRange('week')" round [outline]="isOutlineWeek">
+          {{'week' | translate}}
+        </button>
+        <button ion-button (click)="changeTypeRange('month')" round [outline]="isOutlineMonth">
+          {{'month' | translate}}
+        </button>
+        <!--<button ion-button icon-only (click)="setTimeRange()">-->
+          <!--<ion-icon name="search"></ion-icon>-->
+        <!--</button>-->
+      </ion-buttons>
+    </ion-col>
+  </ion-row>
+
+  <ion-item>
+    <ion-label>{{'date_start' | translate}}</ion-label>
+    <ion-datetime displayFormat="{{ formatdatetime }}" [(ngModel)]="range_start" (ionChange)="setTimeRange()"></ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-label>{{'date_end' | translate}}</ion-label>
+    <ion-datetime displayFormat="{{ formatdatetime }}" [(ngModel)]="range_end" (ionChange)="setTimeRange()"></ion-datetime>
+  </ion-item>
+
+
+
+  <ion-card *ngFor="let item of items">
+
+    <!--<button ion-item (click)="presentCompanyActionSheet(item)" class="border row-company">-->
+    <button ion-item (click)="presentEditModal(item)"  class="border row-company">
+      <ion-avatar item-left *ngIf="item.logo">
+        <img src="{{item.logo}}">
+      </ion-avatar>
+      <h2>{{item.name}}</h2>
+      <p>{{ 'Address' | translate}}: {{item.address}} {{ 'tel' | translate}}: {{item.phone}}</p>
+    </button>
+
+    <button ion-button icon-only clear (click)="presentPopover(item, $event)">
+      <ion-icon name="more"></ion-icon>
+    </button>
+
+    <ion-row *ngIf="item.statistics?.length" >
+      <ion-col>
+        <ion-card-content *ngIf="item.statistics?.length" style="height: 200px;">
+          <div id="line_chart{{item.id}}" [chartData]="getChartData(item.statistics)" [chartOptions]= "chartOptions" chartType="ColumnChart" GoogleChart></div>
+        </ion-card-content>
+      </ion-col>
+      <ion-col width-25>
+        <!--start list-->
+        <ion-item *ngFor="let location of item.locations" >
+          <ion-icon name="pin" darkgreen item-left></ion-icon>
+          <ion-label  tappable>
+            {{location.address}}
+          </ion-label>
+          <ion-checkbox red item-right [(ngModel)]="location.isShowStatistic" (click)="setTimeRange()">
+
+          </ion-checkbox>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+
+    <ion-list>
+
+      <ion-item *ngFor="let location of item.locations">
+
+        <ion-icon name="pin" item-left></ion-icon>
+        <ion-label>
+          {{location.address}}
+        </ion-label>
+        <!--<ion-menu mode="md"></ion-menu>-->
+        <button ion-button icon-only item-right clear (click)="presentLocationEditModal(item, location, $event)">
+          <ion-icon name="more"></ion-icon>
+        </button>
+      </ion-item>
+
+    </ion-list>
+    <ion-buttons right>
+      <button ion-button (click)="presentLocationEditModal(item, null)"><ion-icon name="add"></ion-icon> {{ 'add_location' | translate }}</button>
+    </ion-buttons>
+    <ion-buttons right>
+      <button ion-button (click)="removeCompany(item)"><ion-icon name="add"></ion-icon>{{ 'delete_company' | translate }}</button>
+    </ion-buttons>
+  </ion-card>
+
+  <ion-card *ngIf="!items">
+    <ion-item class="no-company-message">{{ 'add_first_company' | translate }}.</ion-item>
+    <ion-fab center top>
+      <button ion-fab (click)="presentEditModal(null)"><ion-icon name="add"></ion-icon></button>
+    </ion-fab>
+  </ion-card>
+
+  <ion-fab right bottom>
+    <button ion-fab (click)="presentEditModal(null)"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+</ion-content>

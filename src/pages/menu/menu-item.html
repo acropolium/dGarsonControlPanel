@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      {{item.name}}
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+        <span ion-text color="primary" showWhen="ios">{{ translation['Cancel']}}</span>
+        <ion-icon name="md-close" showWhen="android,windows,core"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-list>
+      <ion-item *ngFor="let option of item.options">
+        <!--<ion-icon *ngIf="option.count" name="checkmark-circle" item-left></ion-icon>-->
+        <ion-label>{{option.name}}</ion-label>
+        <span item-right>{{option.price| number:'1.2-2'}}</span>
+        <button ion-button icon-only item-right clear (click)="editOption(option)"><ion-icon name="create"></ion-icon></button>
+        <button ion-button icon-only item-right color="dark" clear (click)="removeMenuOption(option)"><ion-icon name="trash"></ion-icon></button>
+      </ion-item>
+    </ion-list>
+  <ion-segment [(ngModel)]="locale">
+    <ion-segment-button value="uk">
+      {{translation.ukrainian}}
+    </ion-segment-button>
+    <ion-segment-button value="en">
+      {{translation.english }}
+    </ion-segment-button>
+  </ion-segment>
+    <form [formGroup]="menuOption" (ngSubmit)="addMenuOption(item)">
+      <ion-item *ngIf="locale == 'uk'">
+        <ion-label floating>{{ translation['Name'] }}</ion-label>
+        <ion-input formControlName="name_uk"></ion-input>
+      </ion-item>
+
+      <ion-item *ngIf="locale == 'en'">
+        <ion-label floating>{{ translation['Name'] }}</ion-label>
+        <ion-input formControlName="name_en"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label floating>{{ translation['Price']}}</ion-label>
+        <ion-input type="number" formControlName="price" step="any"></ion-input>
+      </ion-item>
+
+      <!--<ion-item>
+        <ion-label>Included</ion-label>
+        <ion-toggle checked="false" formControlName="count"></ion-toggle>
+      </ion-item>-->
+
+      <ion-buttons padding right>
+        <input type="hidden" formControlName="id" />
+        <button ion-button color="light" type="reset" (click)="menuOption.reset()">{{ translation['Cancel'] }}</button>
+        <button ion-button type="submit" [disabled]="!menuOption.valid">{{ translation['Save'] }}</button>
+      </ion-buttons>
+    </form>
+
+</ion-content>

@@ -1,0 +1,83 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      {{item ? item.name : translation['Create']}}
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+        <span ion-text color="primary" showWhen="ios">{{ translation['Cancel'] }}</span>
+        <ion-icon name="md-close" showWhen="android,windows,core"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-segment [(ngModel)]="locale">
+    <ion-segment-button value="uk">
+      {{translation['ukrainian']}}
+    </ion-segment-button>
+    <ion-segment-button value="en">
+      {{translation['english'] }}
+    </ion-segment-button>
+  </ion-segment>
+
+  <form [formGroup]="companyForm" (ngSubmit)="addCompany()">
+
+    <ion-item *ngIf="locale == 'uk'">
+      <ion-label floating>{{ translation['Name'] }}</ion-label>
+      <ion-input formControlName="name_uk"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="locale == 'en'">
+      <ion-label floating>{{ translation['Name'] }}</ion-label>
+      <ion-input formControlName="name_en"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="locale == 'uk'">
+      <ion-label floating>{{ translation['Address'] }}</ion-label>
+      <ion-input formControlName="address_uk"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="locale == 'en'">
+      <ion-label floating>{{ translation['Address'] }}</ion-label>
+      <ion-input formControlName="address_en"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="locale == 'uk'">
+      <ion-label floating>{{ translation['Description'] }}</ion-label>
+      <ion-textarea formControlName="description_uk"></ion-textarea>
+    </ion-item>
+
+    <ion-item *ngIf="locale == 'en'">
+      <ion-label floating>{{ translation['Description'] }}</ion-label>
+      <ion-textarea formControlName="description_en"></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>{{ translation['Phone'] }}</ion-label>
+      <ion-textarea formControlName="phone"></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>{{translation['currency']}}</ion-label>
+      <ion-select formControlName="currency" cancelText="{{'Cancel' | translate }}">
+        <ion-option *ngFor="let type of currencyTypes" [value]="type.currency">{{type.currency}}</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-avatar item-left>
+        <img class="logo" src="{{item !== null ? item.logo : ''}}">
+      </ion-avatar>
+      <div item-content>
+        <input type="file" (change)="changeLogo($event)"/>
+      </div>
+    </ion-item>
+
+    <ion-buttons padding right>
+      <input type="hidden" formControlName="id"/>
+      <button ion-button color="light" type="reset" (click)="dismiss()">{{ translation['Cancel'] }}</button>
+      <button ion-button type="submit" [disabled]="!companyForm.valid">{{ translation['Save'] }}</button>
+    </ion-buttons>
+  </form>
+</ion-content>
