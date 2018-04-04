@@ -1,34 +1,33 @@
 page-orders {
-
 }
 ion-content.cards-bg {
-  background-color: #f4f4f7;
+    background-color: #f4f4f7;
 }
 
-.cards-bg ion-badge{
-  font-size: 2rem;
+.cards-bg ion-badge {
+    font-size: 2rem;
 }
 
-.cards-bg .card-content-md{
-  padding:0;
+.cards-bg .card-content-md {
+    padding: 0;
 }
 
-.border{
-  border-bottom: 1px solid #dedede;
+.border {
+    border-bottom: 1px solid #dedede;
 }
 
-.order-item-option{
-  padding-left:16px
+.order-item-option {
+    padding-left: 16px;
 }
 
 .animated {
-  transition-property: background-color;
-  transition-duration: 3s;
+    transition-property: background-color;
+    transition-duration: 3s;
 }
 
 .no-orders-message {
-  padding: 20px;
-  font-size: 21px;
-  color: #424242;
-  text-align: center;
+    padding: 20px;
+    font-size: 21px;
+    color: #424242;
+    text-align: center;
 }
